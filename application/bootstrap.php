@@ -16,6 +16,8 @@ else
 	require SYSPATH.'classes/Kohana'.EXT;
 }
 
+require APPPATH . 'vendor/autoload.php';
+
 /**
  * Set the default time zone.
  *
@@ -178,5 +180,30 @@ Route::set('upload', '(upload(/<id>))')
 	->defaults(array(
 		'controller' => 'welcome',
 		'action'     => 'upload',
+	));
+
+Route::set('index', '(index(/<id>))')
+	->defaults(array(
+		'controller' => 'welcome',
+		'action'     => 'index',
+	));
+
+Route::set('ComponentOfCTSave', 'ComponentOfCT/save')
+	->defaults(array(
+		'controller' => 'componentOfCTManager',
+		'action'     => 'save',
+	));
+
+Route::set('ComplexTypeSave', 'ComplexType/save')
+	->defaults(array(
+		'controller' => 'complexTypeManager',
+		'action'     => 'save',
+	));
+
+
+Route::set('ComplexSave', 'Complex/save')
+	->defaults(array(
+		'controller' => 'complexManager',
+		'action'     => 'save',
 	));
 

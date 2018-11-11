@@ -1,11 +1,20 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 class Controller_Welcome extends Controller {
 
 	public function action_index()
 	{
-	    echo phpinfo();
-	    //$this->response->body(View::factory('Trial'));
+
+		$spreadsheet = new Spreadsheet();
+		$sheet = $spreadsheet->getActiveSheet();
+		$sheet->setCellValue('A1', 'Hello World !');
+
+		$writer = new Xlsx($spreadsheet);
+		$writer->save($this->uploads_dir() . "docs/" . 'hello world.xlsx');
 	}
 
 	private function uploads_dir()
@@ -136,9 +145,14 @@ class Controller_Welcome extends Controller {
 		{
 			$modinst = Model_Complex::getComplexByUserIdAndInnerId($user->id,
 				$complex->id);
+			$complexComponentModels = $modinst->complex_has_components->find_all();
+			foreach($complexComponentModels as $complexComponentModel)
+			{
+				$complexComponentModel->delete();
+			}
 			$modinst->inner_id = $complex->id;
 			$complexTypeId = Model_ComplexType::getComplexTypeIdByUserIdAndInnerId($user->id,
-				$complexTypeComponent->complexTypeId);
+				$complex->complexTypeId);
 			$addressId = Model_Address::getAddressIdByUserIdAndInnerId($user->id,
 				$complex->addressId);
 			$roomId = Model_Room::getRoomIdByUserIdAndInnerId($user->id,
@@ -148,10 +162,19 @@ class Controller_Welcome extends Controller {
 			$modinst->complex_type_id = $complexTypeId;
 			$modinst->address_id = $addressId;
 			$modinst->room_id = $roomId;
-			$modinst->appendix = $complex->appendix;
-			$modinst->IPADDRESS = $complex->ipAddress;
-			$modinst->photo_path = $complex->photoPath;
-			$modinst->id_by_address = $complex->id_by_address;
+			if(property_exists($complex, 'appendix'))
+			{
+				$modinst->appendix = $complex->appendix;
+			}
+			if(property_exists($complex, 'ipAddress'))
+			{
+				$modinst->IPADDRESS = $complex->ipAddress;
+			}
+			//$modinst->photo_path = '';
+			if(property_exists($complex, 'id_by_address'))
+			{
+				$modinst->id_by_address = $complex->id_by_address;
+			}
 			$modinst->save();
 		}
 
@@ -160,18 +183,25 @@ class Controller_Welcome extends Controller {
 		//save all components of complex type (if they exist, then update)
 		foreach ($info->complexComponents as $complexComponent)
 		{
+			$complexId = Model_Complex::getComplexIdByUserIdAndInnerId($user->id,
+				$complexComponent->complexId);
 			$modinst = Model_ComplexHasComponents::getComplexHasComponentByUserIdAndInnerId($user->id,
 				$complexComponent->id);
 			$modinst->inner_id = $complexComponent->id;
-			$complexId = Model_Complex::getComplexIdByUserIdAndInnerId($user->id,
-				$complexComponent->complexId);
 			$componentId = Model_Component::getComponentIdByUserIdAndInnerId($user->id,
 				$complexComponent->componentId);
 			if($complexId === false || $componentId === false)
 				continue;
 			$modinst->complex_id = $complexId;
 			$modinst->component_id = $componentId;
-			$modinst->code = $complexComponent->code;
+			if(property_exists($complexComponent,'code'))
+			{
+				$modinst->code = $complexComponent->code;
+			}
+			else
+			{
+				$modinst->code = null;
+			}
 			$modinst->save();
 		}
 	}
@@ -179,6 +209,7 @@ class Controller_Welcome extends Controller {
 	public function action_uploadInfo()
 	{
 	    $body = $this->request->post();
+		Kohana::$log->add(LOG::DEBUG, "BODY INFO: ".$body['info']);
 		$this->parseInfo(json_decode($body['info']));
 	    echo "success";
 	}
@@ -291,9 +322,25 @@ class Controller_Welcome extends Controller {
 				// process upload
 				$uploadedfile = Upload::save($validation['image'], NULL, $this->uploads_dir());
 				Kohana::$log->add(LOG::DEBUG, $uploadedfile);
-
+				$complex_id = $this->request->headers("ComplexId");
+				$device_id = $this->request->headers("DeviceId");
+				$user = ORM::factory('User')->where('device_id', '=',$device_id)->find();
+				if(!$user->loaded())
+				{
+					Kohana::$log->add(LOG::DEBUG, "user with device id ".$device_id . " doesn't exist");
+				}
+				$complex = Model_Complex::getComplexByUserIdAndInnerId($user->id, $complex_id);
+				if(!$complex->loaded())
+				{
+					Kohana::$log->add(LOG::DEBUG, "complex with inner id ".$complex_id . " doesn't exist");
+				}
+				$parts = explode("/", $uploadedfile);
+				$path = "../".$parts[count($parts)-2]."/".$parts[count($parts)-1];
+				echo $path;
+				$complex->photo_path = $path;
+				$complex->save();
 				// set user message
-				Session::instance()->set('message', 'Image is successfully uploaded');
+				//Session::instance()->set('message', 'Image is successfully uploaded');
 			}
 
 			// set user errors

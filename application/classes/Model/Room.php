@@ -26,6 +26,8 @@ class Model_Room extends ORM
 
     public static function getRoomIdByUserIdAndInnerId($user_id, $inner_id)
     {
+        if($inner_id == 0)
+            return null;
         $sql = "SELECT DISTINCT r.id FROM rooms AS r
                 JOIN addresses AS a ON r.address_id=a.id
                 JOIN objects AS o ON o.id=a.object_id

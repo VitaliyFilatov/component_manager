@@ -24,6 +24,8 @@ class Model_Address extends ORM
     }
     public static function getAddressIdByUserIdAndInnerId($user_id, $inner_id)
     {
+        if($inner_id == 0)
+            return null;
         $sql = "SELECT a.id FROM addresses AS a
                 JOIN objects AS o ON a.object_id=o.id
                 WHERE o.user_id=:user_id AND a.inner_id=:inner_id";

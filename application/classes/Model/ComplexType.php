@@ -21,6 +21,8 @@ class Model_ComplexType extends ORM
 
     public static function getComplexTypeIdByUserIdAndInnerId($user_id, $inner_id)
     {
+        if($inner_id == 0)
+            return null;
         $sql = "SELECT id FROM complex_types
                 WHERE complex_types.user_id=:user_id AND complex_types.inner_id=:inner_id";
         $query = DB::query(Database::SELECT, $sql);
