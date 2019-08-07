@@ -353,4 +353,4 @@ class Controller_Welcome extends Controller {
 		echo 'success';
 	}
 
-} // End Welcome
+} 
