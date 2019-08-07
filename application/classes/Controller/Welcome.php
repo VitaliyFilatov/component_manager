@@ -32,6 +32,7 @@ class Controller_Welcome extends Controller {
 
 	private function parseInfo($info)
 	{
+		Kohana::$log->add(LOG::DEBUG, 'parse');
 		if(!property_exists($info, 'deviceId'))
 			return;
 		$user = ORM::factory('User')->where('device_id', '=', $info->deviceId)->find();
@@ -216,8 +217,9 @@ class Controller_Welcome extends Controller {
 
 	public function action_manager()
 	{
-		$device_id =  $this->request->query('device_id');
+		//$device_id =  $this->request->query('device_id');
 
+		$device_id = '9dffc8adae41f076';
 		$objects = Model_Object::getObjectsByDeviceId($device_id);
 		View::bind_global('objects', $objects);
 
