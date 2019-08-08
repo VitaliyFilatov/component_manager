@@ -1,0 +1,1 @@
+<?php if (isset($entry)):?><div class="entry"><?=$entry; ?></div><?php endif;?>
