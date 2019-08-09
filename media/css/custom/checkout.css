@@ -1,0 +1,13 @@
+.container {
+    max-width: 960px;
+}
+
+.lh-condensed { line-height: 1.25; }
+
+.custom-control-label-relative::before {
+    top: -.9rem; !important;
+}
+
+.custom-control-label-relative::after {
+    top: -.9rem; !important;
+}

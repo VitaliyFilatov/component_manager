@@ -10,7 +10,6 @@ class Controller_Base extends Controller_Template {
         {
             $this->template->styles = array(
                 "../media/css/bootstrap/bootstrap.min.css",
-                "../media/css/custom/sign-in.css"
             );
 
             $this->template->scripts = array();

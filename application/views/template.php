@@ -9,13 +9,13 @@
     <?php foreach ($styles as $file) {
         echo HTML::style($file, array('media' => 'screen'), TRUE), "\n";
     } ?>
-    <!-- Scripts -->
-    <?php foreach ($scripts as $file) {
-        echo HTML::script($file, NULL, TRUE), "\n";
-    } ?>
 </head>
 <body class="text-center">
 <?php if (isset($entry)): ?>
     <?= $entry; ?><?php endif; ?>
+<!-- Scripts -->
+<?php foreach ($scripts as $file) {
+    echo HTML::script($file, NULL, TRUE), "\n";
+} ?>
 </body>
 </html>
