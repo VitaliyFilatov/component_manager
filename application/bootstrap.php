@@ -153,12 +153,6 @@ Route::set('default', '(<controller>(/<action>(/<id>)))')
 		'action'     => 'show',
 	));
 
-Route::set('users', 'users/login')
-	->defaults(array(
-		'controller' => 'users',
-		'action'     => 'login',
-	));
-
 Route::set('test', '(test(/<id>))')
 	->defaults(array(
 	    'controller' => 'welcome',

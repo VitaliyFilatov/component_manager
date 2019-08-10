@@ -11,6 +11,8 @@
     } ?>
 </head>
 <body class="text-center">
+<?php if (isset($navbar)): ?>
+    <?= $navbar; ?><?php endif; ?>
 <?php if (isset($entry)): ?>
     <?= $entry; ?><?php endif; ?>
 <!-- Scripts -->

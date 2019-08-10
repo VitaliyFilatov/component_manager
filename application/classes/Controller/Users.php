@@ -17,4 +17,10 @@ class Controller_Users extends Controller_Base {
             $this->template->entry = View::factory('SignIn');
         }
     }
+
+    public function action_logout()
+    {
+        Auth::instance()->logout();
+        $this->redirect('users/login');
+    }
 }

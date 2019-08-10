@@ -17,5 +17,8 @@
                 </div>
             </div>
         <?php endforeach; ?>
+        <small class="d-block text-right mt-3">
+            <a href="/main/editUser">Добавить пользователя</a>
+        </small>
     </div>
 </main>

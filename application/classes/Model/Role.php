@@ -2,4 +2,5 @@
 
 class Model_Role extends ORM {
     public $checked = false;
+    public $disabled = false;
 }
